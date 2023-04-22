@@ -1,0 +1,194 @@
+#base robot_giant.pop
+#base robot_standard.pop
+///////////////////////////
+///TODO:1.把那些“NPC”全部添加进来，作为“支援兵种”
+///     2.时刻调整“四个主要”的属性。
+///     3.
+///////////////////////////
+WaveSchedule 
+    {
+        StartingCurrency 114510  ///初始给予金钱（credit）为 114510
+        CanBotsAttackWhileInSpawnRoom no //机器人无法在重生区域攻击玩家
+        /////////////////////////////////
+        ///贯穿整个回合的“任务”（mission）
+        /// 
+        /////////////////////////////////
+        Mission ///间谍任务
+        {
+            Objective Spy
+            Where spawnbot
+            BeginAtWave 2
+            RunForThisManyWaves 1
+            CooldownTime 60
+            DesiredCount 5
+            TFBot
+            {
+                Template T_TFBot_Spy
+            }
+        }
+        Mission
+        {
+            Objective DestroySentries
+            Where spawnbot
+            BeginAtWave 1
+            RunForThisManyWaves 2
+            CooldownTime 60
+            DesiredCount 1
+            TFBot
+            {
+                Template T_TFBot_SentryBuster
+            }
+        }
+        Mission
+        {
+            Objective Engineer
+            BeginAtWave 1
+            RunForThisManyWaves 1
+            CooldownTime 50
+            DesiredCount 6
+            TFBot
+            {
+                Template T_TFBot_Engineer_Sentry_Teleporter
+            }
+        }
+        //////////////////////////////////
+        /////任务
+        //////////////////////////////////
+        Wave
+        {
+            StartWaveOutput
+            {
+                Target wave_start_relay
+                Action Trigger
+            }
+            DoneOutput
+            {
+                Target wave_finished_relay
+                Action Trigger
+            }
+            /////////////////////////////
+            ///接下来这些
+            ////////////////////////////
+            WaveSpawn
+            {
+                name "二十四" //你懂得
+                Name "LXH"
+                TotalCount 1
+                TotalCurrency 500
+                Health 2400
+                Where spawnbot_giant
+                TFBot
+                {
+                    Template T_TFBot_Giant_Demo_Burst ///
+                }
+            }
+            WaveSpawn
+            {
+                name "二十六"
+                WaitForAllDead "LXH"
+                TotalCount 1
+                TotalCurrency 600
+                Health 2600
+                Where spawnbot_giant
+                TFBot
+                {
+                    Template T_TFBot_Giant_Scout_Fast
+                }
+            }
+            WaveSpawn
+            {
+                name "三十"
+                WaitForAllDead "二十六"
+                TotalCount 1
+                TotalCurrency 700
+                Health 2400
+                where spawnbot_giant
+                TFBot
+                {
+                    Template T_TFBot_Giant_Heavyweapons_HealOnKill
+                    ItemAttributes 
+                    {
+                    "damage penalty"  0.5
+                    }
+                }
+            }
+            WaveSpawn
+            {
+                name "三十二"
+                WaitForAllDead "三十"
+                TotalCount 1
+                TotalCurrency 10000
+                Health 3200
+                where spawnbot_giant
+                TFBot
+                {
+                    Template T_TFBot_Chief_Soldier_Extended_Concheror
+                    Attributes MiniBoss
+                    ItemAttributes
+                    {
+                        "move speed penalty" 0.4
+                        "damage penalty" 0.5
+                    }
+                }
+            }
+        }
+        /////////////////////////////////
+        /// Wave 2
+        ////////////////////////////////
+        Wave
+        {
+            StartWaveOutput
+            {
+                Target wave_start_relay
+                Action Trigger
+            }
+            DoneOutput
+            {
+                Target wave_finished_relay
+                Action Trigger
+            }
+            WaveSpawn
+            {
+                Name "那些烦人鬼"
+                TotalCount 40
+                MaxActive 5
+                TotalCurrency 10000
+                
+                where spawnbot
+                TFBot
+                {
+                    Class Demoman
+			        Name "那些烦人鬼"
+			        ClassIcon demoknight_samurai
+			        Skill Hard
+			        Item "The Half-Zatoichi"
+			        Item "The Splendid Screen"
+			        ItemAttributes
+			        {
+				        ItemName "The Splendid Screen"
+				        "Attack not cancel charge" 1
+                        "damage penalty"    0.5
+			        }
+			        Item "Demo Kabuto"
+			        Scale "1.3"
+			        Health 200
+			        WeaponRestrictions MeleeOnly
+			        Attributes AirChargeOnly
+			        //Attributes AlwaysCrit
+			        Attributes AutoJump
+                    Attributes MiniBoss
+				    AutoJumpMin 10
+				    AutoJumpMax 10
+			    CharacterAttributes
+			    {
+				    "charge time increased" 1
+				    "charge recharge rate increased" 7
+				    "increased jump height" 2.3
+				    "bot custom jump particle"	1
+				    "damage bonus"	1.1
+			    }
+                    }
+            }
+        }
+        
+    }

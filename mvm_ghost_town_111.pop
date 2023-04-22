@@ -1,0 +1,110 @@
+#base robot_giant.pop
+#base robot_standard.pop
+
+WaveSchedule
+{
+    StartingCurrency 6666
+    Templates
+    {
+        T_TFBot_Pyro_Rapid_Fire
+        {
+            Class Pyro
+            Name "Rapid Firing Pyro"
+            ClassIcon pyro_flare
+            Skill Expert
+            Health 50000
+            Attributes AlwaysCrit
+            Attributes MiniBoss
+            Attributes AlwaysFireWeapon
+            Attributes BulletImmune
+            Attributes UseBossHealthBar
+            WeaponRestrictions SecondaryOnly
+            Scale 1.8
+            Item "Pyro Helm"
+            Item "The Scorch Shot"
+            ItemAttributes
+            {
+                ItemName "The Scorch Shot"
+                "damage bonus" 3
+                "fire rate bonus" 0.4
+                "faster reload rate" 0.5
+                "bullets per shot bonus" 1.8
+                "heal on hit for rapidfire" 20
+            }
+            CharacterAttributes
+            { 
+                "move speed bonus"	0.2            
+            }
+        }
+        
+        T_TFBot_Medic_Crit
+        { 
+            ClassIcon medic_kritz
+            Class Medic
+            Skill Expert
+            Name "Kritzkrieg Medic"
+            Attributes SpawnWithFullCharge
+            Attributes MiniBoss
+            Attributes UseBossHealthBar
+            Attributes BulletImmune
+            WeaponRestrictions SecondaryOnly
+            Tag "bot_squad_member"
+            Health 3500
+            ItemAttributes
+            {
+                "uber duration bonus" 251
+                "ubercharge rate bonus" 200
+                "move speed bonus" 0.19
+                "heal rate bonus" 400 
+                
+            }
+            CharacterAttributes
+            {
+                "bot medic uber health threshold" 500
+            }
+                Item "Berliner's Bucket Helm"
+                Item "Medic Mask"
+                Item "Vampiric Vesture"
+        }
+    }
+
+        Wave
+        {
+            StartWaveOutput
+			{
+				Target wave_start_relay_666
+				Action Trigger
+			}
+            DoneOutput
+            {
+                Target wave_finished_relay
+                Action Trigger
+            }
+            WaveSpawn
+            {
+                TotalCount 1
+                TotalCurrency 5000
+                where spawnbot
+                Squad
+                {   
+                    TFBot
+                    {
+                        Template T_TFBot_Pyro_Rapid_Fire
+                    }
+                    TFBot
+                    {
+                        Template  T_TFBot_Medic_Crit
+                    }
+                    TFBot
+                    {
+                        Template  T_TFBot_Medic_Crit
+                    }
+                    TFBot
+                    {
+                        Template  T_TFBot_Medic_Crit
+                    }
+                }
+            }
+        }
+}
+

@@ -1,0 +1,313 @@
+#base robot_giant.pop
+#base robot_standard.pop
+///Finally, TODO done!
+WaveSchedule
+{
+    CanBotsAttackWhileInSpawnRoom No
+    StartingCurrency 50000
+    Templates
+    {
+        T_TFBot_Sniper_Jarate
+		{
+			Class Sniper
+			Name "Jarate Master"
+			Skill Expert
+			ClassIcon sniper_jarate
+			Item "Jarate"
+			Item "Master's Yellow Belt" // doesn't appear on robot models
+			Item "Desert Marauder"
+			WeaponRestrictions SecondaryOnly
+			CharacterAttributes
+			{
+				"effect bar recharge rate increased" 0.1
+			}
+		}
+        T_TFBot_Medic_Crit
+        {
+            ClassIcon medic_kritz
+            Class Medic
+            Skill Expert
+            Name "Kritzkrieg Medic"
+            Attributes SpawnWithFullCharge
+            Attributes MiniBoss
+            Attributes UseBossHealthBar
+            Attributes BulletImmune
+            Attributes SecondaryOnly
+            Tag "bot_squad_member"
+            Health 3500
+
+            ItemAttributes
+            {
+                "uber duration bonus" 250
+                "ubercharge rate bonus" 200
+                "move speed bonus" 0.19
+                "heal rate bonus" 400 
+                
+            }
+            CharacterAttributes
+            {
+                "bot medic uber health threshold" 500
+            }
+            Item "Berliner's Bucket Helm"
+            Item "Medic Mask"
+            Item "Vampiric Vesture"
+
+        }
+        T_TFBot_Pyro_Rapid_Fire
+        {
+            Class Pyro
+            Name "Rapid Firing Pyro"
+            ClassIcon pyro_flare
+            Skill Expert
+            Health 50000
+            Attributes AlwaysCrit
+            Attributes MiniBoss
+            Attributes AlwaysFireWeapon
+            Attributes BulletImmune
+            Attributes UseBossHealthBar
+            WeaponRestrictions SecondaryOnly
+            Scale 1.8
+            Item "Pyro Helm"
+            Item "The Scorch Shot"
+            ItemAttributes
+            {
+                ItemName "The Scorch Shot"
+                "damage bonus" 1.5
+                "fire rate bonus" 0.4
+                "faster reload rate" 0.5
+                "bullets per shot bonus" 1.8
+                "heal on hit for rapidfire" 20
+                "damage causes airblast" 0.9
+            }
+            CharacterAttributes
+            { 
+                "move speed bonus"	0.2
+                    
+            }
+        }
+    }    
+    Mission
+    {
+        Objective Spy
+        InitialCooldown 10
+        BeginAtWave 1
+        Where spawnbot
+        RunForThisManyWaves 1
+        CooldownTime 30
+        DesiredCount 5
+        TFBot
+        {
+            Template T_TFBot_Spy
+        }
+    }
+    Mission
+    {
+        Objective Engineer
+        InitialCooldown 20
+        BeginAtWave 1
+        where spawnbot
+        RunForThisManyWaves 1
+        CooldownTime 30
+        DesiredCount 3
+        TFBot
+        {
+            Template T_TFBot_Engineer_Sentry_Teleporter
+        }
+    }
+    Wave
+    {
+        StartWaveOutput
+        {
+            Target wave_start_relay_classic
+            Action Trigger
+        }
+        DoneOutput
+        {
+            Target wave_finished_relay
+            Action Trigger
+        }
+        WaveSpawn
+        {
+            TotalCount 1
+            name "wave01a"
+            TotalCurrency 5000
+            MaxActive 1
+            Where spawnbot
+            Squad
+            {
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Rapid_Fire
+                }
+                TFBot
+                {
+                    Template         T_TFBot_Medic_Crit
+                }
+                TFBot
+                {
+                    Template         T_TFBot_Medic_Crit
+                }
+            }
+
+        }
+        WaveSpawn
+        {
+            name "wave01b"
+            TotalCount 10
+            TotalCurrency 5000
+            Where flankers
+            TFBot
+            {
+                Template T_TFBot_Pyro
+            }
+            TFBot
+            {
+                Template T_TFBot_Demoman 
+            }
+        }
+        WaveSpawn
+        {
+            WaitForAllDead "wave01a"
+            name "end"
+            TotalCount 30
+            MaxActive 10
+            TotalCurrency 300
+            where spawnbot
+            TFBot
+            {
+            
+                Template T_TFBot_Pyro
+        }
+        WaveSpawn
+        {
+            WaitForAllDead "end"
+            TotalCount 40
+            TotalCurrency 4500
+            Where spawnbot
+            Squad
+            {
+                TFBot
+                {
+                    Class Heavy
+                    Skill Expert
+                    ClassIcon heavy_heater
+                    Item "The Huo Long Heatmaker"
+                    Name "Huolong Heavy"
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+
+            }
+        }
+    
+    }
+    Wave
+    ///It is still under construction.
+    {
+        StartWaveOutput
+        {
+            Target wave_start_relay_classic
+            Action Trigger
+        }
+        DoneOutput
+        {
+            Target wave_finished_relay
+            Action Trigger
+        }
+        WaveSpawn
+        {
+            TotalCount 100
+            MaxActive 10
+            TotalCurrency 1000
+            Where spawnbot
+            TFBot
+            {
+                Template T_TFBot_Sniper_Jarate ///
+            }
+        }
+        WaveSpawn
+        {
+            TotalCount 10
+            MaxActive 5
+            TotalCurrency 4500
+            Where flankers
+            TFBot
+            {
+                Class Scout
+			    Name "Wrap Assassin"
+			    Skill Expert
+                Health 250
+			    WeaponRestrictions MeleeOnly
+                Item "The Wrap Assassin"
+            }
+        }
+    }
+    Wave 
+    {
+        StartWaveOutput
+        {
+            Target wave_start_relay_classic
+            Action Trigger
+        }
+        DoneOutput
+        {
+            Target wave_finished_relay
+            Action Trigger
+        }
+        WaveSpawn
+        {
+            TotalCount 4
+            MaxActive 1 
+            Where flankers
+            TotalCurrency 6000
+            TFBot
+            {
+                Class Sniper
+			    Name "Bowman Rapid Fire"
+			    Item "The Huntsman"
+			    ClassIcon sniper_bow
+			    Skill Hard
+			    Health 1200
+			    "scale" 1.5
+			    ItemAttributes
+			    {
+				    ItemName "The Huntsman"
+				    "fire rate bonus" 0.6
+			    }
+			    CharacterAttributes
+			    {
+				    "head scale" 0.7
+				    "move speed bonus"	0.80
+			    }
+            }
+        }
+        WaveSpawn
+        {
+            TotalCount 1
+            TotalCurrency 100
+            SpawnCount 1
+            WaitBeforeStarting 1
+            Tank
+            {
+                Health 11
+                Name "tankboss"
+                speed 75
+                StartingPathTrackNode "tank_path_a_10"
+                OnKilledOutput                              
+				{
+					Target boss_dead_relay					
+					Action Trigger                
+				}
+					
+				OnBombDroppedOutput                       
+				{
+					Target boss_deploy_relay 	
+					Action Trigger                  
+				}
+            }
+        }
+    }
+
+}
